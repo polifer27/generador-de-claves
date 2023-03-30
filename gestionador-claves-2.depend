@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1679755728 source:/home/poli/Documents/lenguaje-C/misproyectos/gestionador-de-claves/gestionador-claves-2/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
