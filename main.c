@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 			case 'A':
 			case 'a':
                 ver_clave(argc, argv[1]);
+                printf("Estamos en la rama usando-csv");
             break;
 
             case 'b':
