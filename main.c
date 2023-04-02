@@ -13,6 +13,7 @@ void salir(void);
 
 int llena_arreglo(char *s, int lim);
 void agrega_terminador(char *s);
+void app_usu_contra(void);
 void agregar_datos(int argumento, char *arch);
 void ver_datos(int argumento, char *arch);
 static void reset(void);
@@ -26,9 +27,7 @@ FILE *fp;
 int main(int argc, char *argv[])
 {
     char opcion;
-    //int c;
-    //int largo = 0; /** Recibe la cantidad de elementos hasta el momento
-       //                en el arreglo **/
+
 
     do{
         printf("++++++++++++++++++++++++++++++++++++++++++++++\n");
@@ -45,25 +44,12 @@ int main(int argc, char *argv[])
         switch(opcion){
 			case 'A':
 			case 'a':
-                //ver_clave(argc, argv[1]);
-                printf("Ingrese la página o aplicacion:\n");
-                llena_arreglo(cad, MAXLINE);
-
-                printf("Ingrese el usuario:\n");
-                llena_arreglo(cad, MAXLINE);
-
-                printf("Ingrese la contraseña:\n");
-                llena_arreglo(cad, MAXLINE);
-
-    //printf("\n");
-                agrega_terminador(cad);
+                app_usu_contra();
                 agregar_datos(argc, argv[1]);
-
             break;
 
             case 'b':
             case 'B':
-                //agregar_clave(argc, argv[1]);
                 ver_datos(argc, argv[1]);
             break;
 
@@ -74,7 +60,7 @@ int main(int argc, char *argv[])
 
             case 'd':
             case 'D':
-                salir();
+                exit(1);
             break;
 
             default: //Opción que no está disponible en el menú
@@ -84,64 +70,24 @@ int main(int argc, char *argv[])
 
         }while(opcion!='e' || opcion!='E');
 	    //Hacer mientras el usuario no selecciona la opción de salir...
-    //}
+
     return 0;
 }
-/***********************************************************/
-/**void ver_clave(int argumento, char *cad)
+/** Agregar app usu y contra **/
+void app_usu_contra(void)
 {
-    char car;
-    if(argumento != 2){
-                    printf("Has olvidade introducir el nombre del archivo.\n");
-                    exit(1);
-                }
-                if((fp = fopen(cad, "r")) == NULL){
-                    printf("No se puede abrir el archivo.\n");
-                    exit(1);
-                }**/
+    printf("Ingrese la página o aplicacion:\n");
+    llena_arreglo(cad, MAXLINE);
 
-/**	car = getc(fp); Leer un caracter **/
- /**   while(car != EOF){**/
-  /**      putchar(car);  Lo muestra en la pantalla **/
-  /**      car = getc(fp);
-    }
-    fclose(fp);
-}**/
-/*********************************************************/
-/**void agregar_clave(int argumento, char *cad)
-{
-    char ch;
-    char cadena[80];
-    if(argumento != 2){
-        printf("Has olvidade introducir el nombre del archivo.\n");
-        exit(1);
-    }
-    if((fp = fopen(cad, "a")) == NULL){
-        printf("No se puede abrir el archivo.\n");
-        exit(1);
-    }
+    printf("Ingrese el usuario:\n");
+    llena_arreglo(cad, MAXLINE);
 
-    //while((ch = getchar()) != '\n' && ch != EOF);
+    printf("Ingrese la contraseña:\n");
+    llena_arreglo(cad, MAXLINE);
 
-    do{
-        printf("Introduce tu cadena(Intro para terminar):\n");
-        gets(cadena);**/
-/**        strcat(cadena, "\n");   añade un salto de línea **/
-  /**      fputs(cadena, fp);**/
-/**    }while(*cadena != '\n');**/
- /**   fclose(fp);
-}**/
-/*********************************************************/
-void borrar_clave(void)
-{
+    agrega_terminador(cad);
 
 }
-/*********************************************************/
-void salir(void)
-{
-
-}
-/*************************************************************/
 /** llena_arreglo: va metiendo los datos ingresados en un arreglo que
     porsteriormente seran volcados en un archivo tipo csv **/
 int llena_arreglo(char *s, int lim)
@@ -200,34 +146,11 @@ void agregar_datos(int argumento, char *arch)
 
     fclose(fp);
 }
-/** csvtest main: prueba de la biblioteca CSV **/
-
-
-/**int main(int argc, char *argv[])
-{
-    int i;
-    char *line;
-    FILE *fp;
-
-    if(argc != 2){
-        printf("Has olvidade introducir el nombre del archivo.\n");
-        exit(1);
-    }**/
-    /** Funciona con r, r+, rb, ab, a+, a solo no funciona **/
- /**   if((fp = fopen(argv[1], "rb")) == NULL){
-        printf("No se puede abrir el archivo.\n");
-        exit(1);
-    }
-    while((line = csvgetline(fp)) != NULL){
-        printf("line = '%s'\n", line);
-        for(i = 0; i < csvnfield(); i++)
-            printf("campo[%d] = '%s'\n", i, csvfield(i));
-    }
-    return 0;
-}**/
+/** ver datos permite ver por pantalla **/
 void ver_datos(int argumento, char *arch)
 {
     int i;
+    int j = 0;
     char *line;
 
     if(argumento != 2){
@@ -240,10 +163,36 @@ void ver_datos(int argumento, char *arch)
     }
 
     while((line = csvgetline(fp)) != NULL){
-        printf("line = '%s'\n", line);
-        for(i = 0; i < csvnfield(); i++)
-            printf("campo[%d] = '%s'\n", i, csvfield(i));
+        if(j == 0){
+          printf("          ");
+
+          for(i = 0; *line != '\0'; line++){
+              if(*line == ',')
+                  printf("               ");
+              else{
+
+                  printf("%c", *line);
+              }
+          }
+         }
+        else {
+           printf("%d- '%s'\n",j ,line);
+           }
+        j++;
+        //for(i = 0; i < csvnfield(); i++){
+          //  printf("campo[%d] = '%s'\n", i, csvfield(i));
+            //if(i >= 0 && i <=1)
+            //    ;
+            //else
+              // printf(" %s ", csvfield(i));
+        //}
+        printf("\n");
+
     }
+}
+void borrar_clave(void)
+{
+
 }
 /** csvgetline: lee una línea, crece según se requiera **/
 /** entrada de muestra: "LU",86.25,"11/4/1998","2:19PM",+4.0625 **/
