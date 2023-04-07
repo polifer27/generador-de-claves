@@ -4,7 +4,7 @@
 #include "csv.h"
 
 #define MAXLINE 300
-
+#define NUM_CARACTERES 8
 //void ver_clave(int argumento, char *cad);
 //void agregar_clave(int argumento, char *cad);
 void borrar_clave(void);
@@ -14,6 +14,8 @@ void salir(void);
 int llena_arreglo(char *s, int lim);
 void agrega_terminador(char *s);
 void app_usu_contra(void);
+char *generar_contraseña(void);
+char *generate_key(int max);
 void agregar_datos(int argumento, char *arch);
 void ver_datos(int argumento, char *arch);
 static void reset(void);
@@ -27,11 +29,12 @@ FILE *fp;
 int main(int argc, char *argv[])
 {
     char opcion;
+    //char *ptr;
 
 
     do{
         printf("++++++++++++++++++++++++++++++++++++++++++++++\n");
-        printf(" A- Agregar app-usuario-contraseña\n");
+        printf(" A- Agregar app, usuario, la contraseña es generada por el programa\n");
         printf(" B- Ver app-usuario-contraseña\n");
         printf(" C- Borrar clave\n");
         printf(" D- Salir del programa\n");
@@ -45,7 +48,19 @@ int main(int argc, char *argv[])
 			case 'A':
 			case 'a':
                 app_usu_contra();
-                agregar_datos(argc, argv[1]);
+               // agrega_terminador(cad);
+
+                //ptr = generate_key(8);
+              //  ptr = ptr + 8;
+               // ptr = '\0';
+               // ptr = ptr - 8;
+                //printf("%s\n", ptr);
+                //for(int i = 0; i < 8; i++)
+                //    printf("%c", ptr[i]);
+                //printf("\n");
+                //ptr -= 8;
+                 agregar_datos(argc, argv[1]);
+
             break;
 
             case 'b':
@@ -76,16 +91,29 @@ int main(int argc, char *argv[])
 /** Agregar app usu y contra **/
 void app_usu_contra(void)
 {
+    char *p;
+    int i = 0;
+    int j;
     printf("Ingrese la página o aplicacion:\n");
     llena_arreglo(cad, MAXLINE);
 
     printf("Ingrese el usuario:\n");
-    llena_arreglo(cad, MAXLINE);
+    // La variable i contiene la cantidad de caracteres en total ingresados hasta el momento
+    // en cad contando la coma separadora y todo
+    i = llena_arreglo(cad, MAXLINE);
 
-    printf("Ingrese la contraseña:\n");
-    llena_arreglo(cad, MAXLINE);
+    p = generate_key(NUM_CARACTERES);
 
-    agrega_terminador(cad);
+    for(j = 0; j <= NUM_CARACTERES; j++){
+        cad[i+j] = *p;
+        p++;
+    }
+    j++;
+    cad[i+j] = '\n';
+    j++;
+    cad[i+j] = '\0';
+
+  // agrega_terminador(cad);
 
 }
 /** llena_arreglo: va metiendo los datos ingresados en un arreglo que
@@ -106,13 +134,13 @@ int llena_arreglo(char *s, int lim)
         ++s;      /** se adelanta el puntero **/
         ++i;
     }
-    *s = '\0';
-    ++s;
-    *s = '\n';
+   // *s = '\0';
+   // ++s;
+   // *s = '\n';
     return i;  /** Retorna la cantidad de caracteres ingresados **/
-}
+
 /** Agrega_terminador **/
-void agrega_terminador(char *s)
+/**void agrega_terminador(char *s)
 {
     int i;
     for(i = 0; *s != '\0'; ++i, ++s)
@@ -120,7 +148,40 @@ void agrega_terminador(char *s)
 
     s--; /** Se va un lugar para atras y se agrega el terminador nulo en
          lugar de la ultima coma **/
-    *s = '\0';
+   // *s = '\0';
+/**}**/
+
+/** generar_contraseña **/
+char *generar_contraseña(void)
+{
+    char *p;
+    p = generate_key(NUM_CARACTERES);
+    //cad++;
+
+    //llena_arreglo(p, MAXLINE);
+}
+char *generate_key(int max){
+    // diccionario de caracteres
+    char diccionario[] = {
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+        'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+        'w', 'x', 'y', 'z', ' ',
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+        'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+        'W', 'X', 'Y', 'Z',
+        '!', '?', '¿','#', '@', '%', '&', '*', '-', '{', '}', '[', ']',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
+
+    srand(getpid()); // genero una semilla para poder tener un numero random
+    char *key = malloc(sizeof(char)+max); // le doy la cantidad de memoria a la variable que guardara la clave
+    int len = (int)strlen(diccionario); // obtengo la longitud de caracteres del diccionario
+
+    for(int i = max; i >= 0; i--){
+        key[i] = diccionario[rand() % len]; // se genera la clave aleatoria
+    }
+
+    return key;
 }
 /** Agregar_datos: funcion que va agregando los datos ingresados en un
     archivo csv **/
@@ -167,8 +228,6 @@ void ver_datos(int argumento, char *arch)
           printf("          ");
 
           for(i = 0; *line != '\0'; line++){
-              if(*line == '')
-              
               if(*line == ',')
                   printf("               ");
               else{
